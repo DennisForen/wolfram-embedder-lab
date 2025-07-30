@@ -1,5 +1,5 @@
 # Run App
-From the root directory of the app (i.e., `express-basic-nb-ssr/`):
+From the root directory of the app (i.e., `wolfram-embedder-lab/`):
 ```
 npm run app
 ```
