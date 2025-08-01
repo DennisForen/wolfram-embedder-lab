@@ -1,5 +1,12 @@
 const express = require('express');
+const indexRouter = require('./routes/index.js');
+
 const app = express();
+app.set('views', 'views');
+app.set('view engine', 'ejs');
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.static('public'));
 
 const IS_LOG_VERBOSE = true;
 const IS_USE_SHADOW_DOM = true;
@@ -73,7 +80,7 @@ function writeTwoColumnPage(leftContent, rightContent) {
 	+		'</table>';
 }
 
-app.get(['/','/{:uri}'], async (req, res) => {
+app.get(['/basic/','/basic/{:uri}'], async (req, res) => {
 	const URI = req.params.uri && req.params.uri !== 'favicon.ico' ? req.params.uri : EXAMPLE_URI;
 	res.send(
 			writeTwoColumnPage(
@@ -83,6 +90,9 @@ app.get(['/','/{:uri}'], async (req, res) => {
 		+	writeClientSideRenderingScript(IS_USE_SHADOW_DOM)
 	);
 });
+
+app.get('/favicon.ico', (req, res) => res.status(204));
+app.use("/", indexRouter);
 
 app.listen(PORT, () => {
 	console.log(`Server running at http://localhost:${PORT}`);

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Wolfram Notebook Embedder Lab</title>
+		<link rel="stylesheet" href="/css/style.css" />
+		<style>
+			#wolfram-embedded-notebook-result {
+				<% if (renderGeneral.getOptionValue("max-width") !== "Infinity") { %>
+					max-width: <%= renderGeneral.getOptionValue("max-width") %>px;
+				<% } %>
+				<% if (renderGeneral.getOptionValue("max-height") !== "Infinity") { %>
+					max-width: <%= renderGeneral.getOptionValue("max-height") %>px;
+				<% } %>
+				<% if (renderGeneral.getOptionValue("showBorder")) { %>
+					border: 5px solid black;
+				<% } %>
+			}
+		</style>
+	</head>
+	<body>
+		<form id="wolfram-embedded-notebook-form">
+			<div class="form-uuid-field">
+				<label for="uuid-input">
+					<a href="/">UUID of Public Wolfram Cloud Notebook</a>
+				</label>
+				<input type="text" id="uuid-input" name="uuid"
+					pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+					placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+					value="<%= uuid %>"
+					required
+				/>
+			</div>
+
+			<div id="wolfram-embedded-notebook-options" class="form-options">
+				<div class="options-column">
+					<div class="options-header">
+						General Render Options
+					</div>
+					
+					<div class="rendering-option-field">
+						<label for="maxWidthGeneral-input">
+							max-width (px):
+						</label>
+						<input type="text" id="maxWidthGeneral-input" name="maxWidthGeneral" />
+					</div>
+
+					<div class="rendering-option-field">
+						<label for="maxHeightGeneral-input">
+							max-height (px):
+						</label>
+						<input type="text" id="maxHeightGeneral-input" name="maxHeightGeneral" />
+					</div>
+
+					<div class="rendering-option-field">
+						<label for="showBorderGeneral-input">
+							show border?
+						</label>
+						<input type="checkbox" id="showBorderGeneral-input" name="showBorderGeneral" />
+					</div>
+
+					<div class="rendering-option-field">
+						<label for="delayCSRGeneral-input">
+							delay CSR (ms):
+						</label>
+						<input type="text" id="delayCSRGeneral-input" name="delayCSRGeneral" />
+					</div>
+
+					<div class="general-options-buttons">
+						<button type="button" id="reset-general-options-button">Reset to Defaults</button>
+					</div>
+				</div>
+
+				<div class="options-column">
+					<div class="options-header">Server-Side Rendering Options</div>
+
+					<input type="hidden" id="ssrEnabled-input" name="ssrEnabled"/>
+
+					<div class="show-only-when-ssr-disabled">
+						<div class="ssr-options-buttons">
+							<button type="button" id="enable-ssr-button">Enable SSR</button>
+						</div>
+					</div>
+
+					<div class="show-only-when-ssr-enabled">
+						<div class="rendering-option-field">
+							<label for="maxwaitmillisSSR-input">
+								maxwaitmillis:
+							</label>
+							<input type="text" id="maxwaitmillisSSR-input" name="maxwaitmillisSSR" />
+						</div>
+						<div class="rendering-option-field">
+							<label for="widthSSR-input">
+								width:
+							</label>
+							<input type="text" id="widthSSR-input" name="widthSSR" />
+						</div>
+
+						<div class="rendering-option-field">
+							<label for="limitcontentSSR-input">
+								limitcontent?
+							</label>
+							<input type="checkbox" id="limitcontentSSR-input" name="limitcontentSSR" />
+						</div>
+
+						<div class="ssr-options-buttons">
+							<button type="button" id="disable-ssr-button">Disable SSR</button>
+							<button type="button" id="reset-ssr-options-button">Reset to Defaults</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="options-column">
+					<div class="options-header">Client-Side Rendering Options</div>
+
+					<input type="hidden" id="csrEnabled-input" name="csrEnabled"/>
+
+					<div class="show-only-when-csr-disabled">
+						<div class="ssr-options-buttons">
+							<button type="button" id="enable-csr-button">Enable CSR</button>
+						</div>
+					</div>
+
+					<div class="show-only-when-csr-enabled">
+						<div class="rendering-option-field">
+							<label for="widthCSR-input">
+								width:
+							</label>
+							<input type="text" id="widthCSR-input" name="widthCSR" />
+						</div>
+						
+						<div class="rendering-option-field">
+							<label for="maxHeightCSR-input">
+								maxHeight:
+							</label>
+							<input type="text" id="maxHeightCSR-input" name="maxHeightCSR" />
+						</div>
+
+						<div class="rendering-option-field">
+							<label for="showBorderCSR-input">showBorder:</label>
+							<select id="showBorderCSR-input" name="showBorderCSR">
+								<option value="null">null</option>
+								<option value="true">true</option>
+								<option value="false">false</option>
+							</select>
+						</div>
+
+						<div class="rendering-option-field">
+							<label for="allowInteractCSR-input">
+								allowInteract?
+							</label>
+							<input type="checkbox" id="allowInteractCSR-input" name="allowInteractCSR" />
+						</div>
+
+						<div class="rendering-option-field">
+							<label for="showRenderProgressCSR-input">
+								showRenderProgress?
+							</label>
+							<input type="checkbox" id="showRenderProgressCSR-input" name="showRenderProgressCSR" />
+						</div>
+
+						<div class="rendering-option-field">
+							<label for="useShadowDOMCSR-input">
+								useShadowDOM?
+							</label>
+							<input type="checkbox" id="useShadowDOMCSR-input" name="useShadowDOMCSR" />
+						</div>
+
+						<div class="csr-options-buttons">
+							<button type="button" id="disable-csr-button">Disable CSR</button>
+							<button type="button" id="reset-csr-options-button">Reset to Defaults</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-submit">
+				<input id="render-button" type="submit" value="Render"></input>
+			</div>
+		</form>
+
+		<hr/>
+
+		<% if (renderSSR.isEnabled || renderCSR.isEnabled) { %>
+			<div id="wolfram-embedded-notebook-current-render-options">
+				<div class="options-header">Options Used In Render Below</div>
+
+				<% if (renderSSR.isEnabled) { %>
+					<div class="option-key">SSR url</div>
+					<div class="option-value"><%- dataSSR.url; %></div>
+				<% } %>
+
+				<% if (renderCSR.isEnabled) { %>
+					<div class="option-key">CSR options</div>
+					<div class="option-value"><%- JSON.stringify(dataCSR.options).replaceAll(',', ', ').replaceAll(':', ': '); %></div>
+				<% } %>
+			</div>
+			
+			<hr/>
+		<% } %>
+
+		<%# Render Result %>
+		<div
+			id="wolfram-embedded-notebook-result"
+			<% if (renderCSR.isEnabled) { %>
+				data-url="<%= dataCSR.url %>"
+				data-type="application/vnd.wolfram.notebook"
+			<% } %>
+		>
+			<% if (renderSSR.isEnabled) { %>
+				<%- dataSSR.statichtml %>
+			<% } %>
+		</div>
+
+		<%# Scripts %>
+		<% if (renderCSR.isEnabled) { %>
+			<script crossorigin src="https://unpkg.com/wolfram-notebook-embedder@0.3/dist/wolfram-notebook-embedder.min.js"></script>
+		<% } %>
+
+		<script>
+			const form = document.getElementById("wolfram-embedded-notebook-form");
+			const options = document.getElementById("wolfram-embedded-notebook-options");
+
+			// Set General Options
+			function setOptionsGeneral() {
+				document.getElementById("maxWidthGeneral-input").value = "<%= String(renderGeneral.getOptionValue("max-width")) %>";
+				document.getElementById("maxHeightGeneral-input").value = "<%= String(renderGeneral.getOptionValue("max-height")) %>";
+				document.getElementById("showBorderGeneral-input").checked = <%= renderGeneral.getOptionValue("showBorder") %>;
+				document.getElementById("delayCSRGeneral-input").value = "<%= String(renderGeneral.getOptionValue("delayCSR")) %>";
+			}
+
+			// Reset General Options
+			function resetOptionsGeneral() {
+				document.getElementById("maxWidthGeneral-input").value = "<%= String(renderGeneral.getOptionInitial("max-width")) %>";
+				document.getElementById("maxHeightGeneral-input").value = "<%= String(renderGeneral.getOptionInitial("max-height")) %>";
+				document.getElementById("showBorderGeneral-input").checked = <%= renderGeneral.getOptionInitial("showBorder") %>;
+				document.getElementById("delayCSRGeneral-input").value = "<%= String(renderGeneral.getOptionInitial("delayCSR")) %>";
+			}
+
+			document.getElementById("reset-general-options-button").addEventListener("click", (event) => {
+				resetOptionsGeneral();
+			});
+
+			// Enable or Disable SSR Options
+			function setEnableSSR(isEnabled) {
+				if (isEnabled) {
+					options.classList.add("ssr-enabled");
+					document.getElementById("ssrEnabled-input").value = "on";
+				} else {
+					options.classList.remove("ssr-enabled");
+					document.getElementById("ssrEnabled-input").value = "";
+				}
+			}
+
+			document.getElementById("enable-ssr-button").addEventListener("click", (event) => {
+				setEnableSSR(true);
+			});
+
+			document.getElementById("disable-ssr-button").addEventListener("click", (event) => {
+				setEnableSSR(false);
+			});
+			
+			// Set SSR Options
+			function setOptionsSSR() {
+				document.getElementById("maxwaitmillisSSR-input").value = "<%= String(renderSSR.getOptionValue("maxwaitmillis")) %>";
+				document.getElementById("widthSSR-input").value = "<%= String(renderSSR.getOptionValue("width")) %>";
+				document.getElementById("limitcontentSSR-input").checked = <%= renderSSR.getOptionValue("limitcontent") %>;
+			}
+
+			// Reset SSR Options
+			function resetOptionsSSR() {
+				document.getElementById("maxwaitmillisSSR-input").value = "<%= String(renderSSR.getOptionInitial("maxwaitmillis")) %>";
+				document.getElementById("widthSSR-input").value = "<%= String(renderSSR.getOptionInitial("width")) %>";
+				document.getElementById("limitcontentSSR-input").checked = <%= String(renderSSR.getOptionInitial("limitcontent")) %>;
+			}
+
+			document.getElementById("reset-ssr-options-button").addEventListener("click", (event) => {
+				resetOptionsSSR();
+			});
+
+			// Enable or Disable CSR Options
+			function setEnableCSR(isEnabled) {
+				if (isEnabled) {
+					options.classList.add("csr-enabled");
+					document.getElementById("csrEnabled-input").value = "on";
+				} else {
+					options.classList.remove("csr-enabled");
+					document.getElementById("csrEnabled-input").value = null;
+				}
+			}
+
+			document.getElementById("enable-csr-button").addEventListener("click", (event) => {
+				setEnableCSR(true);
+			});
+
+			document.getElementById("disable-csr-button").addEventListener("click", (event) => {
+				setEnableCSR(false);
+			});
+			
+			// Set CSR Options
+			function setOptionsCSR() {
+				document.getElementById("widthCSR-input").value = "<%= String(renderCSR.getOptionValue("width")) %>";
+				document.getElementById("maxHeightCSR-input").value = "<%= String(renderCSR.getOptionValue("maxHeight")) %>";
+				document.getElementById("showBorderCSR-input").value = "<%= String(renderCSR.getOptionValue("showBorder")) %>";
+				document.getElementById("allowInteractCSR-input").checked = <%= renderCSR.getOptionValue("allowInteract") %>;
+				document.getElementById("showRenderProgressCSR-input").checked = <%= renderCSR.getOptionValue("showRenderProgress") %>;
+				document.getElementById("useShadowDOMCSR-input").checked = <%= renderCSR.getOptionValue("useShadowDOM") %>;
+			}
+
+			// Reset CSR Options
+			function resetOptionsCSR() {
+				document.getElementById("widthCSR-input").value = "<%= String(renderCSR.getOptionInitial("width")) %>";
+				document.getElementById("maxHeightCSR-input").value = "<%= String(renderCSR.getOptionInitial("maxHeight")) %>";
+				document.getElementById("showBorderCSR-input").value = "<%= String(renderCSR.getOptionInitial("showBorder")) %>";
+				document.getElementById("allowInteractCSR-input").checked = <%= renderCSR.getOptionInitial("allowInteract") %>;
+				document.getElementById("showRenderProgressCSR-input").checked = <%= renderCSR.getOptionInitial("showRenderProgress") %>;
+				document.getElementById("useShadowDOMCSR-input").checked = <%= renderCSR.getOptionInitial("useShadowDOM") %>;
+			}
+
+			document.getElementById("reset-csr-options-button").addEventListener("click", (event) => {
+				resetOptionsCSR();
+			});
+
+			// Initialize State
+			function initializeState(uuid) {
+				if (uuid) {
+					setOptionsGeneral();
+					setOptionsSSR();
+					setOptionsCSR();
+				} else {
+					resetOptionsGeneral();
+					resetOptionsSSR();
+					resetOptionsCSR();
+				}
+				setEnableSSR(<%= renderSSR.isEnabled %>);
+				setEnableCSR(<%= renderCSR.isEnabled %>);
+			}
+
+			initializeState("<%= uuid %>");
+
+			// Client-Side Rendering
+			<% if (renderCSR.isEnabled) { %>
+				window.addEventListener("DOMContentLoaded", (event) => {
+					<% if (renderGeneral.getOptionValue("delayCSR") > 0) { %>
+						setTimeout(function() {
+					<% } %>
+							const nbs = document.querySelectorAll("[data-type='application/vnd.wolfram.notebook']");
+							nbs.forEach((nb) => {
+								WolframNotebookEmbedder.embed(nb.dataset.url, nb, JSON.parse('<%- JSON.stringify(dataCSR.options)%>'));
+							});
+					<% if (renderGeneral.getOptionValue("delayCSR") > 0) { %>
+						}, <%= renderGeneral.getOptionValue("delayCSR") %>);
+					<% } %>
+				});
+			<% } %>
+		</script>
+	</body>
+</html>

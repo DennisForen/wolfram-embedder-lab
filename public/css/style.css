@@ -1,0 +1,135 @@
+body {
+	font-family: sans-serif;
+}
+
+hr {
+	margin: 2em 0;
+}
+
+#wolfram-embedded-notebook-form {
+	margin: 1em;
+
+	label {
+		font-weight: bold;
+
+	}
+	
+	button {
+		margin: 1em;
+	}
+
+	.form-uuid-field {
+		margin: 2em;
+		text-align: center;
+
+		label {
+			display: block;
+			font-size: 1.5em;
+
+			a {
+				color: black;
+				text-decoration: none;
+				transition: all .2s ease-in-out;
+			}
+
+			a:hover {
+				color: orange;
+			}
+		}
+
+		input {
+			height: 1.5em;
+			margin: 0.5em 0;
+			text-align: center;
+			width: 20em;
+		}
+	}
+
+	#wolfram-embedded-notebook-options {
+		&.ssr-enabled {
+			.show-only-when-ssr-disabled {
+				display: none;
+			}
+		}
+
+		&:not(.ssr-enabled) {
+			.show-only-when-ssr-enabled {
+				display: none;
+			}
+		}
+
+		&.csr-enabled {
+			.show-only-when-csr-disabled {
+				display: none;
+			}
+		}
+
+		&:not(.csr-enabled) {
+			.show-only-when-csr-enabled {
+				display: none;
+			}
+		}
+	}
+
+	.form-options {
+		display: flex;
+		justify-content: center;
+		text-align: center;
+
+		.options-column {
+			margin: 1em 3em;
+			min-width: 20em;
+		}
+	}
+
+	.options-header {
+		font-size: 1.25em;
+		font-weight: bold;
+		margin-bottom: 0.25em;
+		text-decoration: underline;
+	}
+
+	.rendering-option-field {
+		text-align: left;
+
+		label {
+			display: inline-block;
+			margin: 0.5em 0;
+			min-width: 8em;
+		}
+	}
+
+	.form-submit {
+		margin: 1em;
+		text-align: center;
+
+		input {
+			font-weight: bold;
+			padding: 0.5em 1em;
+		}
+	}
+}
+
+#wolfram-embedded-notebook-current-render-options {
+	text-align: center;
+
+	.options-header {
+		font-size: 1.25em;
+		font-weight: bold;
+		text-decoration: underline;
+	}
+
+	.option-key {
+		font-weight: bold;
+		margin-top: 1em;
+		text-decoration: underline;
+	}
+
+	.option-value {
+		margin-bottom: 1em;
+	}
+}
+
+#wolfram-embedded-notebook-result {
+	margin: 0 auto;
+}
